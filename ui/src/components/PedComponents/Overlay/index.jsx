@@ -16,8 +16,8 @@ const useStyles = makeStyles((theme) => ({
 		gridGap: 0,
 		gridTemplateColumns: '10% 45% 45%',
 		justifyContent: 'space-around',
-		background: theme.palette.secondary.light,
-		border: `2px solid ${theme.palette.border.divider}`,
+		// background: theme.palette.secondary.light,
+		// border: `2px solid ${theme.palette.border.divider}`,
 	},
 }));
 

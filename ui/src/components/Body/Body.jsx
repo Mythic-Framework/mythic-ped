@@ -30,13 +30,13 @@ export default ({ armsOnly, blockPed }) => {
 			<Wrapper>
 				<AppBar
 					position="static"
-					color="secondary"
-					style={{ paddingBottom: 15 }}
+					color="transparent"
+					style={{ marginBottom: 15, boxShadow: 'none' }}
 				>
 					<Tabs
 						value={value}
 						onChange={handleChange}
-						variant="scrollable"
+						variant="fullWidth"
 						indicatorColor="primary"
 						textColor="primary"
 					>
@@ -55,9 +55,11 @@ export default ({ armsOnly, blockPed }) => {
 				<TabPanel value={value} index={1}>
 					<BodyOverlays />
 				</TabPanel>
-				{!blockPed && <TabPanel value={value} index={2}>
-					<Ped />
-				</TabPanel>}
+				{!blockPed && (
+					<TabPanel value={value} index={2}>
+						<Ped />
+					</TabPanel>
+				)}
 			</Wrapper>
 		);
 	}
