@@ -18,8 +18,8 @@ const useStyles = makeStyles((theme) => ({
 		gridGap: 0,
 		gridTemplateColumns: '75% 25%',
 		justifyContent: 'space-around',
-		background: theme.palette.secondary.light,
-		border: `2px solid ${theme.palette.border.divider}`,
+		// background: theme.palette.secondary.light,
+		// border: `2px solid ${theme.palette.border.divider}`,
 	},
 	btnWrapper: {
 		position: 'relative',
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	add: {
 		marginTop: 0,
-        marginBottom: 15,
+		marginBottom: 15,
 		padding: 5,
 	},
 }));
@@ -61,9 +61,9 @@ export default connect()((props) => {
 
 	const onChange = (value, data, index) => {
 		return (d) => {
-            if (!Boolean(value) || !Boolean(tattoos[value])) return;
-			
-            let payload = {
+			if (!Boolean(value) || !Boolean(tattoos[value])) return;
+
+			let payload = {
 				type: props.data.type,
 				data: tattoos[value],
 				index,
@@ -99,7 +99,7 @@ export default connect()((props) => {
 			</Button>
 
 			{props.current.map((tattoo, k) => {
-                if (tattoo.Zone != props.data.type) return null;
+				if (tattoo.Zone != props.data.type) return null;
 				try {
 					let curr =
 						tattoo?.Name == ''

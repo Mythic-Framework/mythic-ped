@@ -61,66 +61,69 @@ export default (props) => {
 	const classes = useStyles();
 	const dispatch = useDispatch();
 
-	const onLeft = () => {
-		if (props.disabled) return;
+	const min = props.min ?? 0;
+	const max = props.max;
 
+	const sendValue = (v) => {
 		Nui.send('FrontEndSound', { sound: 'UPDOWN' });
 
 		if (Boolean(props.onChange)) {
-			props.onChange(
-				props.current - 1 < 0 ? props.max : props.current - 1,
-				props.data,
-			);
+			props.onChange(v, props.data);
 		} else {
-			dispatch(
-				props.event(
-					props.current - 1 < 0 ? props.max : props.current - 1,
-					props.data,
-				),
-			);
+			dispatch(props.event(v, props.data));
 		}
+	};
+
+	const onLeft = () => {
+		if (props.disabled) return;
+
+		const next = props.current - 1 < min ? max : props.current - 1;
+		sendValue(next);
 	};
 
 	const onRight = () => {
 		if (props.disabled) return;
 
-		Nui.send('FrontEndSound', { sound: 'UPDOWN' });
-
-		if (Boolean(props.onChange)) {
-			props.onChange(
-				props.current + 1 > props.max ? 0 : props.current + 1,
-				props.data,
-			);
-		} else {
-			dispatch(
-				props.event(
-					props.current + 1 > props.max ? 0 : props.current + 1,
-					props.data,
-				),
-			);
-		}
+		const next = props.current + 1 > max ? min : props.current + 1;
+		sendValue(next);
 	};
 
 	const updateIndex = (event) => {
+		if (props.disabled) return;
+
 		try {
-			let v = parseInt(event.target.value, 10);
+			const raw = event.target.value;
 
-			if (!props.disabled) {
-				if (event.target.value > props.max) {
-					v = props.max;
-				} else if (event.target.value < props.min) {
-					v = props.min;
-				}
-				Nui.send('FrontEndSound', { sound: 'UPDOWN' });
+			if (raw === '') return;
 
-				if (Boolean(props.onChange)) {
-					props.onChange(v, props.data);
-				} else {
-					dispatch(props.event(v, props.data));
-				}
+			let v = parseInt(raw, 10);
+			if (Number.isNaN(v)) return;
+
+			if (v > max) {
+				v = min;
+			} else if (v < min) {
+				v = max;
 			}
+
+			sendValue(v);
 		} catch (err) {
-			//console.log(err);
+			// console.log(err);
+		}
+	};
+
+	const handleKeyDown = (event) => {
+		if (props.disabled) return;
+
+		if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+			event.preventDefault();
+
+			if (event.key === 'ArrowUp') {
+				const next = props.current + 1 > max ? min : props.current + 1;
+				sendValue(next);
+			} else if (event.key === 'ArrowDown') {
+				const next = props.current - 1 < min ? max : props.current - 1;
+				sendValue(next);
+			}
 		}
 	};
 
@@ -149,16 +152,17 @@ export default (props) => {
 						value={props.current}
 						className={classes.textField}
 						onChange={updateIndex}
+						onKeyDown={handleKeyDown}
 						disabled={props.disabled}
 						type="number"
 						pattern="[0-9]*"
 						inputProps={{
-							min: props.min,
-							max: props.max,
+							min,
+							max,
 							step: 1,
 						}}
 					/>{' '}
-					/ {props.max}
+					/ {max}
 				</div>
 				<div
 					className={`${classes.action}${

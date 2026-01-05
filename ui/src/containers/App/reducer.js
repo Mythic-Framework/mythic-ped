@@ -1,6 +1,6 @@
 export const initialState = {
-	hidden: true,
-	state: '',
+	hidden: process.env.NODE_ENV == 'production',
+	state: process.env.NODE_ENV == 'production' ? '' : 'CREATOR',
 	loading: false,
 	camera: 0,
 	isNekked: false,
@@ -10,9 +10,10 @@ export const initialState = {
 		BARBER: 100,
 		SHOP: 100,
 		TATTOO: 100,
+		SURGERY: 5000,
 	},
 	ped: {
-		model: '',
+		model: 'mp_m_freemode_01',
 		customization: {
 			face: {
 				face1: {
@@ -332,7 +333,7 @@ const appReducer = (state = initialState, action) => {
 				},
 			};
 		case 'UPDATE_PED_FACE_FEATURE':
-			const newFeatures = {...state.ped.customization.face.features};
+			const newFeatures = { ...state.ped.customization.face.features };
 			newFeatures[action.payload.index] = action.payload.value;
 			return {
 				...state,

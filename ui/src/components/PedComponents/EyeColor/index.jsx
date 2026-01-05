@@ -13,8 +13,8 @@ const useStyles = makeStyles((theme) => ({
 		overflowY: 'auto',
 		margin: 25,
 		justifyContent: 'space-around',
-		background: theme.palette.secondary.light,
-		border: `2px solid ${theme.palette.border.divider}`,
+		// background: theme.palette.secondary.light,
+		// border: `2px solid ${theme.palette.border.divider}`,
 	},
 }));
 
