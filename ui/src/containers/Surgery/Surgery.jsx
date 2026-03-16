@@ -80,62 +80,48 @@ const useStyles = makeStyles((theme) => ({
 		overflowY: 'auto',
 		padding: 12,
 	},
-	saveBar: {
-		position: 'absolute',
-		bottom: '1.5%',
-		left: '1.5%',
+	panelFooter: {
+		flexShrink: 0,
+		borderTop: '1px solid rgba(32,134,146,0.15)',
+		background: 'rgba(10,9,20,0.4)',
+		padding: '10px 12px',
 		display: 'flex',
+		justifyContent: 'flex-end',
 		gap: 8,
-		padding: '8px 10px',
-		borderRadius: 2,
-		background: 'rgba(18,16,37,0.9)',
-		border: '1px solid rgba(32,134,146,0.15)',
-		backdropFilter: 'blur(8px)',
 	},
 	btn: {
-		minWidth: 110,
 		height: 34,
-		padding: '0 14px',
+		padding: '0 16px',
 		borderRadius: 2,
 		textTransform: 'uppercase',
 		fontSize: 11,
 		fontWeight: 700,
 		fontFamily: "'Rajdhani', sans-serif",
 		letterSpacing: '0.15em',
-		color: '#ffffff',
-		background: 'rgba(32,134,146,0.12)',
-		border: '1px solid rgba(32,134,146,0.35)',
-		boxShadow: 'none',
-		transition: 'all 150ms ease',
+		border: 'none !important',
+		outline: 'none !important',
+		boxShadow: 'none !important',
+		transition: 'background 150ms ease, transform 150ms ease',
 		'&:hover': {
-			background: 'rgba(32,134,146,0.22)',
-			borderColor: '#208692',
-			boxShadow: '0 0 12px rgba(32,134,146,0.3)',
+			border: 'none !important',
+			outline: 'none !important',
+			boxShadow: 'none !important',
 			transform: 'translateY(-1px)',
 		},
-		'&:active': { transform: 'translateY(0)' },
+		'&:focus': { border: 'none !important', outline: 'none !important', boxShadow: 'none !important' },
+		'&:active': { transform: 'translateY(0)', border: 'none !important', outline: 'none !important', boxShadow: 'none !important' },
 		'& .MuiButton-startIcon': { marginRight: 6 },
 		'& .MuiButton-startIcon svg': { fontSize: 11 },
 	},
 	btnPrimary: {
 		background: 'rgba(82,152,74,0.15)',
-		borderColor: 'rgba(82,152,74,0.4)',
 		color: '#60eb50',
-		'&:hover': {
-			background: 'rgba(82,152,74,0.28)',
-			borderColor: '#52984a',
-			boxShadow: '0 0 12px rgba(82,152,74,0.25)',
-		},
+		'&:hover': { background: 'rgba(82,152,74,0.28)' },
 	},
 	btnDanger: {
 		background: 'rgba(110,22,22,0.15)',
-		borderColor: 'rgba(161,52,52,0.4)',
 		color: '#a13434',
-		'&:hover': {
-			background: 'rgba(110,22,22,0.28)',
-			borderColor: '#a13434',
-			boxShadow: '0 0 12px rgba(110,22,22,0.25)',
-		},
+		'&:hover': { background: 'rgba(110,22,22,0.28)' },
 	},
 	'@keyframes panelSlide': {
 		'0%': { opacity: 0, transform: 'translateX(40px)' },
@@ -166,9 +152,7 @@ export default (props) => {
 		dispatch(SavePed(state));
 	};
 
-	const payLabel = admin
-		? "Ready, I'm not ugly anymore!"
-		: `Pay ${CurrencyFormat.format(cost || 0)}`;
+	const payLabel = admin ? "Ready, I'm not ugly anymore!" : `Pay ${CurrencyFormat.format(cost || 0)}`;
 
 	return (
 		<div>
@@ -180,15 +164,7 @@ export default (props) => {
 					<span className={classes.panelTitle}>Surgical Enhancements</span>
 				</div>
 				<div className={classes.tabHeader}>
-					<Tabs
-						orientation="horizontal"
-						value={value}
-						onChange={handleChange}
-						indicatorColor="primary"
-						textColor="primary"
-						variant="fullWidth"
-						className={classes.tabs}
-					>
+					<Tabs orientation="horizontal" value={value} onChange={handleChange} indicatorColor="primary" textColor="primary" variant="fullWidth" className={classes.tabs}>
 						<Tab className={classes.tab} label={<FontAwesomeIcon icon={['fas', 'face-grimace']} />} />
 						<Tab className={classes.tab} label={<FontAwesomeIcon icon={['fas', 'child-reaching']} />} />
 						<Tab className={classes.tab} label={<FontAwesomeIcon icon={['fas', 'scissors']} />} />
@@ -199,44 +175,22 @@ export default (props) => {
 					<TabPanel value={value} index={1}><Body /></TabPanel>
 					<TabPanel value={value} index={2}><Hair /></TabPanel>
 				</div>
+				<div className={classes.panelFooter}>
+					<Button disableRipple disableElevation variant="text" className={`${classes.btn} ${classes.btnDanger}`} onClick={() => setCancelling(true)} startIcon={<FontAwesomeIcon icon={['fas', 'skull-crossbones']} />}>
+						Abort Operation
+					</Button>
+					<Button disableRipple disableElevation variant="text" className={`${classes.btn} ${classes.btnPrimary}`} onClick={() => setSaving(true)} startIcon={<FontAwesomeIcon icon={['fas', 'save']} />}>
+						{payLabel}
+					</Button>
+				</div>
 			</div>
 
 			<Naked />
-			<div className={classes.saveBar}>
-				<Button
-					className={`${classes.btn} ${classes.btnDanger}`}
-					onClick={() => setCancelling(true)}
-					startIcon={<FontAwesomeIcon icon={['fas', 'skull-crossbones']} />}
-				>
-					Abort Operation
-				</Button>
-				<Button
-					className={`${classes.btn} ${classes.btnPrimary}`}
-					onClick={() => setSaving(true)}
-					startIcon={<FontAwesomeIcon icon={['fas', 'save']} />}
-				>
-					{payLabel}
-				</Button>
-			</div>
 
-			<Dialog
-				title="Leave Surgeon's Office?"
-				open={cancelling}
-				onAccept={onCancel}
-				onDecline={() => setCancelling(false)}
-				acceptLang="I'm Already Beautiful"
-				declineLang="Wait, I'm Still Ugly"
-			>
+			<Dialog title="Leave Surgeon's Office?" open={cancelling} onAccept={onCancel} onDecline={() => setCancelling(false)} acceptLang="I'm Already Beautiful" declineLang="Wait, I'm Still Ugly">
 				<p>Any changes you've made will be lost. Are you sure you want to bail?</p>
 			</Dialog>
-			<Dialog
-				title="Finalize Your New Look?"
-				open={saving}
-				onAccept={onSave}
-				onDecline={() => setSaving(false)}
-				acceptLang="Sculpt Me, Doctor"
-				declineLang="Actually, Wait"
-			>
+			<Dialog title="Finalize Your New Look?" open={saving} onAccept={onSave} onDecline={() => setSaving(false)} acceptLang="Sculpt Me, Doctor" declineLang="Actually, Wait">
 				{admin ? (
 					<p>This procedure is free — the surgeon said they need the practice.</p>
 				) : (

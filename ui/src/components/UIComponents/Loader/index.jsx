@@ -8,8 +8,7 @@ const useStyles = makeStyles((theme) => ({
 		display: 'flex',
 		alignItems: 'center',
 		justifyContent: 'center',
-		background: 'rgba(18,16,37,0.7)',
-		backdropFilter: 'blur(4px)',
+		background: 'rgba(10,9,20,0.92)',
 		zIndex: 9999,
 	},
 	card: {
@@ -18,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
 		alignItems: 'center',
 		gap: 20,
 		padding: '32px 48px',
-		background: 'rgba(18,16,37,0.96)',
+		background: 'rgba(18,16,37,0.98)',
 		border: '1px solid rgba(32,134,146,0.25)',
 		borderRadius: 2,
 		boxShadow: '0 0 0 1px rgba(32,134,146,0.08), 0 24px 60px rgba(0,0,0,0.8)',

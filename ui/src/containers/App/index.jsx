@@ -56,21 +56,9 @@ export default connect()((props) => {
 		}
 	}, [state]);
 
-	const isDev = process.env.NODE_ENV !== 'production';
-
-	const appStyle = {
-		backgroundImage: isDev
-			? 'url(https://r2.fivemanage.com/oRaHpwzOyBkJ59DT5lan6/Discord_UHtGc0ozkh.jpg)'
-			: 'none',
-		backgroundSize: 'cover',
-		backgroundPosition: 'center',
-		height: '100vh',
-		width: '100%',
-	};
-
 	return (
 		<Fade in={!hidden}>
-			<div className="App" style={appStyle}>
+			<div className="App" style={{ height: '100vh', width: '100%' }}>
 				{loading ? <Loader /> : display}
 				<Tip />
 			</div>
