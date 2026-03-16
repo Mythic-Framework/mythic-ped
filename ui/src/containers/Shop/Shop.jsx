@@ -79,62 +79,53 @@ const useStyles = makeStyles((theme) => ({
 		overflowY: 'auto',
 		padding: 12,
 	},
-	saveBar: {
-		position: 'absolute',
-		bottom: '1.5%',
-		left: '1.5%',
+	panelFooter: {
+		flexShrink: 0,
+		borderTop: '1px solid rgba(32,134,146,0.15)',
+		background: 'rgba(10,9,20,0.4)',
+		padding: '10px 12px',
 		display: 'flex',
+		justifyContent: 'flex-end',
 		gap: 8,
-		padding: '8px 10px',
-		borderRadius: 2,
-		background: 'rgba(18,16,37,0.9)',
-		border: '1px solid rgba(32,134,146,0.15)',
-		backdropFilter: 'blur(8px)',
 	},
 	btn: {
-		minWidth: 110,
 		height: 34,
-		padding: '0 14px',
+		padding: '0 16px',
 		borderRadius: 2,
 		textTransform: 'uppercase',
 		fontSize: 11,
 		fontWeight: 700,
 		fontFamily: "'Rajdhani', sans-serif",
 		letterSpacing: '0.15em',
-		color: '#ffffff',
-		background: 'rgba(32,134,146,0.12)',
-		border: '1px solid rgba(32,134,146,0.35)',
-		boxShadow: 'none',
-		transition: 'all 150ms ease',
+		border: 'none !important',
+		outline: 'none !important',
+		boxShadow: 'none !important',
+		transition: 'background 150ms ease, transform 150ms ease',
 		'&:hover': {
-			background: 'rgba(32,134,146,0.22)',
-			borderColor: '#208692',
-			boxShadow: '0 0 12px rgba(32,134,146,0.3)',
+			border: 'none !important',
+			outline: 'none !important',
+			boxShadow: 'none !important',
 			transform: 'translateY(-1px)',
 		},
-		'&:active': { transform: 'translateY(0)' },
+		'&:focus': { border: 'none !important', outline: 'none !important', boxShadow: 'none !important' },
+		'&:active': { transform: 'translateY(0)', border: 'none !important', outline: 'none !important', boxShadow: 'none !important' },
 		'& .MuiButton-startIcon': { marginRight: 6 },
 		'& .MuiButton-startIcon svg': { fontSize: 11 },
 	},
+	btnDefault: {
+		background: 'rgba(32,134,146,0.12)',
+		color: '#ffffff',
+		'&:hover': { background: 'rgba(32,134,146,0.22)' },
+	},
 	btnPrimary: {
 		background: 'rgba(82,152,74,0.15)',
-		borderColor: 'rgba(82,152,74,0.4)',
 		color: '#60eb50',
-		'&:hover': {
-			background: 'rgba(82,152,74,0.28)',
-			borderColor: '#52984a',
-			boxShadow: '0 0 12px rgba(82,152,74,0.25)',
-		},
+		'&:hover': { background: 'rgba(82,152,74,0.28)' },
 	},
 	btnDanger: {
 		background: 'rgba(110,22,22,0.15)',
-		borderColor: 'rgba(161,52,52,0.4)',
 		color: '#a13434',
-		'&:hover': {
-			background: 'rgba(110,22,22,0.28)',
-			borderColor: '#a13434',
-			boxShadow: '0 0 12px rgba(110,22,22,0.25)',
-		},
+		'&:hover': { background: 'rgba(110,22,22,0.28)' },
 	},
 	'@keyframes panelSlide': {
 		'0%': { opacity: 0, transform: 'translateX(40px)' },
@@ -173,9 +164,7 @@ export default (props) => {
 		dispatch(SaveImport(outfitName, importCode));
 	};
 
-	const payLabel = admin
-		? 'Save Everything'
-		: `Pay ${CurrencyFormat.format(cost || 0)}`;
+	const payLabel = admin ? 'Save Everything' : `Pay ${CurrencyFormat.format(cost || 0)}`;
 
 	return (
 		<div>
@@ -187,15 +176,7 @@ export default (props) => {
 					<span className={classes.panelTitle}>Fitting Room</span>
 				</div>
 				<div className={classes.tabHeader}>
-					<Tabs
-						orientation="horizontal"
-						value={value}
-						onChange={handleChange}
-						indicatorColor="primary"
-						textColor="primary"
-						variant="fullWidth"
-						className={classes.tabs}
-					>
+					<Tabs orientation="horizontal" value={value} onChange={handleChange} indicatorColor="primary" textColor="primary" variant="fullWidth" className={classes.tabs}>
 						<Tab className={classes.tab} label={<FontAwesomeIcon icon={['fas', 'shirt']} />} />
 						<Tab className={classes.tab} label={<FontAwesomeIcon icon={['fas', 'hat-cowboy-side']} />} />
 					</Tabs>
@@ -204,78 +185,29 @@ export default (props) => {
 					<TabPanel value={value} index={0}><Clothes /></TabPanel>
 					<TabPanel value={value} index={1}><Accessories /></TabPanel>
 				</div>
+				<div className={classes.panelFooter}>
+					<Button disableRipple disableElevation variant="text" className={`${classes.btn} ${classes.btnDefault}`} onClick={() => setOpenImportDialog(true)} startIcon={<FontAwesomeIcon icon={['fas', 'file-import']} />}>
+						Import Outfit
+					</Button>
+					<Button disableRipple disableElevation variant="text" className={`${classes.btn} ${classes.btnDanger}`} onClick={() => setCancelling(true)} startIcon={<FontAwesomeIcon icon={['fas', 'door-open']} />}>
+						Leave
+					</Button>
+					<Button disableRipple disableElevation variant="text" className={`${classes.btn} ${classes.btnPrimary}`} onClick={() => setSaving(true)} startIcon={<FontAwesomeIcon icon={['fas', 'save']} />}>
+						{payLabel}
+					</Button>
+				</div>
 			</div>
 
 			<Naked />
-			<div className={classes.saveBar}>
-				<Button
-					className={classes.btn}
-					onClick={() => setOpenImportDialog(true)}
-					startIcon={<FontAwesomeIcon icon={['fas', 'file-import']} />}
-				>
-					Import Outfit
-				</Button>
-				<Button
-					className={`${classes.btn} ${classes.btnDanger}`}
-					onClick={() => setCancelling(true)}
-					startIcon={<FontAwesomeIcon icon={['fas', 'door-open']} />}
-				>
-					Leave Fitting Room
-				</Button>
-				<Button
-					className={`${classes.btn} ${classes.btnPrimary}`}
-					onClick={() => setSaving(true)}
-					startIcon={<FontAwesomeIcon icon={['fas', 'save']} />}
-				>
-					{payLabel}
-				</Button>
-			</div>
 
-			<Dialog
-				open={openImportDialog}
-				title="Import Outfit Code"
-				onAccept={handleImportConfirm}
-				onDecline={() => setOpenImportDialog(false)}
-				acceptLang="Import"
-				declineLang="Cancel"
-			>
-				<TextField
-					autoFocus
-					margin="dense"
-					label="Outfit Name"
-					type="text"
-					fullWidth
-					value={outfitName}
-					onChange={(e) => setOutfitName(e.target.value)}
-				/>
-				<TextField
-					margin="dense"
-					label="Outfit Code"
-					type="text"
-					fullWidth
-					value={importCode}
-					onChange={(e) => setImportCode(e.target.value)}
-				/>
+			<Dialog open={openImportDialog} title="Import Outfit Code" onAccept={handleImportConfirm} onDecline={() => setOpenImportDialog(false)} acceptLang="Import" declineLang="Cancel">
+				<TextField autoFocus margin="dense" label="Outfit Name" type="text" fullWidth value={outfitName} onChange={(e) => setOutfitName(e.target.value)} />
+				<TextField margin="dense" label="Outfit Code" type="text" fullWidth value={importCode} onChange={(e) => setImportCode(e.target.value)} />
 			</Dialog>
-
-			<Dialog
-				title="Disregard Outfit?"
-				open={cancelling}
-				onAccept={onCancel}
-				onDecline={() => setCancelling(false)}
-				acceptLang="Yes, I'm sure"
-				declineLang="Wait, I'm not done"
-			>
+			<Dialog title="Disregard Outfit?" open={cancelling} onAccept={onCancel} onDecline={() => setCancelling(false)} acceptLang="Yes, I'm sure" declineLang="Wait, I'm not done">
 				<p>All changes will be discarded, are you sure you want to continue?</p>
 			</Dialog>
-			<Dialog
-				title="Purchase Outfit?"
-				open={saving}
-				onAccept={onSave}
-				onDecline={() => setSaving(false)}
-				acceptLang="Yes, I'm stylish"
-				declineLang="Let me keep shopping"
-			>
+			<Dialog title="Purchase Outfit?" open={saving} onAccept={onSave} onDecline={() => setSaving(false)} acceptLang="Yes, I'm stylish" declineLang="Let me keep shopping">
 				<p>You will be charged <span style={{ color: '#208692', fontWeight: 700 }}>{CurrencyFormat.format(cost)}</span>.</p>
 				<p>Are you sure you want to save?</p>
 			</Dialog>
