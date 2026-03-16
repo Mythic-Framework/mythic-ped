@@ -14,28 +14,38 @@ const useStyles = makeStyles((theme) => ({
 		transform: 'translateY(-50%)',
 		display: 'flex',
 		flexDirection: 'column',
-		gap: 8,
-		padding: 8,
-		background: theme.palette.secondary.dark + '99',
-		borderRadius: 10,
-		border: `1px solid ${theme.palette.border.divider}`,
+		gap: 6,
+		padding: '10px 8px',
+		background: 'rgba(18,16,37,0.92)',
+		border: '1px solid rgba(32,134,146,0.2)',
+		boxShadow: '0 0 24px rgba(0,0,0,0.6), 0 0 16px rgba(32,134,146,0.06)',
+		borderRadius: 2,
 		zIndex: 15,
+		animation: '$camSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1) both',
 	},
-
+	divider: {
+		height: 1,
+		background: 'rgba(32,134,146,0.15)',
+		margin: '2px 0',
+	},
 	button: {
-		width: 44,
-		height: 44,
-		color: theme.palette.text.alt,
-		background: theme.palette.secondary.main + '55',
-		transition: 'background 0.15s ease-in-out, color 0.15s ease-in-out',
-
+		width: 40,
+		height: 40,
+		borderRadius: 2,
+		color: 'rgba(255,255,255,0.4)',
+		background: 'transparent',
+		border: '1px solid transparent',
+		transition: 'all 0.15s ease',
 		'&:hover': {
-			background: theme.palette.secondary.main + '88',
+			color: 'rgba(255,255,255,0.8)',
+			background: 'rgba(32,134,146,0.1)',
+			borderColor: 'rgba(32,134,146,0.25)',
 		},
-
 		'&.active': {
-			color: theme.palette.primary.main,
-			background: theme.palette.primary.main + '22',
+			color: '#208692',
+			background: 'rgba(32,134,146,0.15)',
+			borderColor: 'rgba(32,134,146,0.4)',
+			boxShadow: '0 0 8px rgba(32,134,146,0.2)',
 		},
 	},
 }));
@@ -49,10 +59,7 @@ export default function CamBar() {
 		try {
 			const res = await (await Nui.send('ChangeCamera', cam)).json();
 			if (res) {
-				dispatch({
-					type: 'SET_CAM',
-					payload: { cam },
-				});
+				dispatch({ type: 'SET_CAM', payload: { cam } });
 			}
 		} catch (err) {}
 	};
@@ -66,16 +73,16 @@ export default function CamBar() {
 
 	return (
 		<div className={classes.wrapper}>
-			{cams.map((c) => (
-				<IconButton
-					key={c.id}
-					className={`${classes.button} ${
-						camera === c.id ? 'active' : ''
-					}`}
-					onClick={() => setCam(c.id)}
-				>
-					<FontAwesomeIcon icon={c.icon} />
-				</IconButton>
+			{cams.map((c, i) => (
+				<React.Fragment key={c.id}>
+					<IconButton
+						className={`${classes.button} ${camera === c.id ? 'active' : ''}`}
+						onClick={() => setCam(c.id)}
+					>
+						<FontAwesomeIcon icon={c.icon} style={{ fontSize: 15 }} />
+					</IconButton>
+					{i < cams.length - 1 && <div className={classes.divider} />}
+				</React.Fragment>
 			))}
 		</div>
 	);

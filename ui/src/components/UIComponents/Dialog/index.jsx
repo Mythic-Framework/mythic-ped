@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import {
 	Dialog,
@@ -6,65 +6,85 @@ import {
 	DialogContent,
 	DialogActions,
 	Button,
-	alpha,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles((theme) => ({
 	dialogPaper: {
-		background: alpha(theme.palette.secondary.main, 0.7),
-		color: theme.palette.text.primary,
+		background: 'rgba(18,16,37,0.98)',
+		border: '1px solid rgba(32,134,146,0.25)',
+		borderRadius: 2,
+		boxShadow: '0 0 0 1px rgba(32,134,146,0.08), 0 32px 80px rgba(0,0,0,0.8)',
+		color: '#ffffff',
+		minWidth: 380,
+		overflow: 'hidden',
+	},
+	dialogAccent: {
+		height: 2,
+		background: 'linear-gradient(90deg, transparent, #208692, transparent)',
+	},
+	dialogTitle: {
+		fontFamily: "'Orbitron', sans-serif",
+		fontSize: 14,
+		fontWeight: 700,
+		letterSpacing: '0.06em',
+		color: '#ffffff',
+		borderBottom: '1px solid rgba(32,134,146,0.15)',
+		padding: '16px 20px 12px',
+	},
+	dialogContent: {
+		fontFamily: "'Rajdhani', sans-serif",
+		fontSize: 14,
+		color: 'rgba(255,255,255,0.7)',
+		letterSpacing: '0.02em',
+		padding: '16px 20px',
+		'& p': { margin: '0 0 8px', '&:last-child': { marginBottom: 0 } },
 	},
 	dialogActions: {
-		padding: '8px 12px',
+		padding: '12px 20px 16px',
 		gap: 8,
+		borderTop: '1px solid rgba(32,134,146,0.12)',
+		display: 'flex',
 	},
 	btn: {
-		minWidth: 96,
-		height: 32,
-		padding: '0 12px',
-		borderRadius: 8,
-		textTransform: 'none',
-		fontSize: 14,
-		fontWeight: 500,
-		letterSpacing: 0,
-		color: theme.palette.text.primary,
-		background: alpha(theme.palette.primary.main, 0.12),
-		border: `1px solid ${alpha(theme.palette.primary.main, 0.18)}`,
+		flex: 1,
+		height: 34,
+		padding: '0 14px',
+		borderRadius: 2,
+		textTransform: 'uppercase',
+		fontSize: 11,
+		fontWeight: 700,
+		fontFamily: "'Rajdhani', sans-serif",
+		letterSpacing: '0.15em',
+		color: 'rgba(255,255,255,0.6)',
+		background: 'transparent',
+		border: '1px solid rgba(255,255,255,0.15)',
 		boxShadow: 'none',
-		transition:
-			'background 120ms ease, border-color 120ms ease, transform 120ms ease',
+		transition: 'all 150ms ease',
 		'&:hover': {
-			background: alpha(theme.palette.primary.main, 0.45),
-			borderColor: alpha(theme.palette.primary.main, 0.35),
-			transform: 'translateY(-1px)',
-			boxShadow: 'none',
-		},
-		'&:active': {
-			transform: 'translateY(0px)',
-		},
-		'& .MuiButton-startIcon': {
-			marginRight: 8,
-		},
-		'& .MuiButton-startIcon svg': {
-			fontSize: 12,
-			opacity: 0.85,
+			color: '#ffffff',
+			borderColor: 'rgba(255,255,255,0.35)',
+			background: 'rgba(255,255,255,0.05)',
 		},
 	},
 	btnPrimary: {
-		background: alpha(theme.palette.success.main, 0.35),
-		borderColor: alpha(theme.palette.success.main, 0.25),
+		color: '#4db8c4',
+		background: 'rgba(14,90,98,0.15)',
+		borderColor: 'rgba(14,90,98,0.5)',
 		'&:hover': {
-			background: alpha(theme.palette.success.main, 0.45),
-			borderColor: alpha(theme.palette.success.main, 0.35),
+			background: 'rgba(14,90,98,0.3)',
+			borderColor: '#4db8c4',
+			boxShadow: '0 0 10px rgba(14,90,98,0.3)',
 		},
 	},
 	btnDanger: {
-		background: alpha(theme.palette.error.main, 0.35),
-		borderColor: alpha(theme.palette.error.main, 0.25),
+		color: '#a13434',
+		background: 'rgba(110,22,22,0.12)',
+		borderColor: 'rgba(110,22,22,0.4)',
 		'&:hover': {
-			background: alpha(theme.palette.error.main, 0.45),
-			borderColor: alpha(theme.palette.error.main, 0.35),
+			background: 'rgba(110,22,22,0.25)',
+			borderColor: '#a13434',
+			boxShadow: '0 0 10px rgba(110,22,22,0.25)',
 		},
 	},
 }));
@@ -86,30 +106,20 @@ export default ({
 			maxWidth="sm"
 			open={open}
 			onClose={onDecline}
-			PaperProps={{
-				className: classes.dialogPaper,
-			}}
+			PaperProps={{ className: classes.dialogPaper }}
 		>
-			<DialogTitle
-				style={{
-					userSelect: 'none',
-				}}
-			>
+			<div className={classes.dialogAccent} />
+			<DialogTitle className={classes.dialogTitle} style={{ userSelect: 'none' }}>
 				{title}
 			</DialogTitle>
-			<DialogContent>{children}</DialogContent>
+			<DialogContent className={classes.dialogContent}>
+				{children}
+			</DialogContent>
 			<DialogActions className={classes.dialogActions}>
-				<Button
-					className={`${classes.btn} ${classes.btnDanger}`}
-					onClick={onDecline}
-				>
+				<Button className={`${classes.btn} ${classes.btnDanger}`} onClick={onDecline}>
 					{declineLang}
 				</Button>
-
-				<Button
-					className={`${classes.btn} ${classes.btnPrimary}`}
-					onClick={onAccept}
-				>
+				<Button className={`${classes.btn} ${classes.btnPrimary}`} onClick={onAccept}>
 					{acceptLang}
 				</Button>
 			</DialogActions>

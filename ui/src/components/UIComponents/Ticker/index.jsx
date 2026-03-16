@@ -1,59 +1,99 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { TextField } from '@mui/material';
+import { TextField, IconButton } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import Nui from '../../../util/Nui';
-import { IconButton } from '@mui/material';
 
 const useStyles = makeStyles((theme) => ({
 	div: {
 		width: '100%',
-		fontSize: 13,
-		fontWeight: 500,
+		fontSize: 12,
+		fontFamily: "'Rajdhani', sans-serif",
+		fontWeight: 600,
 		textAlign: 'center',
-		textDecoration: 'none',
-		textShadow: 'none',
 		whiteSpace: 'nowrap',
 		display: 'inline-block',
 		verticalAlign: 'middle',
-		borderRadius: 3,
+		borderRadius: 2,
 		transition: '0.1s all linear',
 		userSelect: 'none',
 		color: '#ffffff',
-		marginBottom: 5,
-		lineHeight: '38px',
+		marginBottom: 4,
+		background: 'rgba(18,16,37,0.5)',
+		border: '1px solid rgba(32,134,146,0.12)',
+		padding: '6px 8px',
 	},
-	slider: {
+	label: {
 		display: 'block',
-		position: 'relative',
-		top: '25%',
-	},
-	action: {
-		height: 80,
-		lineHeight: '80px',
-		'&:not(.disabled):hover': {
-			filter: 'brightness(0.6)',
-			transition: 'filter ease-in 0.15s',
-		},
-	},
-	textField: {
-		width: 25,
-		'& input': {
-			textAlign: 'center',
-			color: theme.palette.primary.main,
-		},
-		'& input::-webkit-clear-button, & input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button':
-			{
-				display: 'none',
-			},
+		gridColumn: 2,
+		gridRow: 1,
+		letterSpacing: '0.08em',
+		textTransform: 'uppercase',
+		color: 'rgba(255,255,255,0.6)',
+		fontSize: 11,
+		lineHeight: '32px',
 	},
 	wrapper: {
 		display: 'grid',
-		gridGap: 0,
-		gridTemplateColumns: '20% 60% 20%',
-		gridTemplateRows: '40px 40px',
+		gridTemplateColumns: '36px 1fr 36px',
+		gridTemplateRows: '32px 36px',
+		alignItems: 'center',
+	},
+	actionBtn: {
+		width: 32,
+		height: 32,
+		borderRadius: 2,
+		color: 'rgba(32,134,146,0.6)',
+		border: '1px solid rgba(32,134,146,0.15)',
+		background: 'rgba(32,134,146,0.06)',
+		transition: 'all 0.15s ease',
+		'&:hover:not(.disabled)': {
+			color: '#208692',
+			borderColor: 'rgba(32,134,146,0.4)',
+			background: 'rgba(32,134,146,0.15)',
+		},
+		'&.disabled': {
+			opacity: 0.3,
+			cursor: 'default',
+		},
+	},
+	valueBox: {
+		gridColumn: 2,
+		gridRow: 2,
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		gap: 4,
+		fontSize: 13,
+		color: '#208692',
+		fontWeight: 700,
+	},
+	textField: {
+		width: 32,
+		'& input': {
+			textAlign: 'center',
+			color: '#208692',
+			fontFamily: "'Rajdhani', sans-serif",
+			fontWeight: 700,
+			fontSize: 14,
+			padding: '2px 0',
+		},
+		'& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': {
+			display: 'none',
+		},
+		'& .MuiInput-underline:before': {
+			borderBottomColor: 'rgba(32,134,146,0.3)',
+		},
+		'& .MuiInput-underline:after': {
+			borderBottomColor: '#208692',
+		},
+	},
+	maxLabel: {
+		color: 'rgba(255,255,255,0.3)',
+		fontSize: 12,
+		fontWeight: 600,
 	},
 }));
 
@@ -66,7 +106,6 @@ export default (props) => {
 
 	const sendValue = (v) => {
 		Nui.send('FrontEndSound', { sound: 'UPDOWN' });
-
 		if (Boolean(props.onChange)) {
 			props.onChange(v, props.data);
 		} else {
@@ -76,77 +115,59 @@ export default (props) => {
 
 	const onLeft = () => {
 		if (props.disabled) return;
-
 		const next = props.current - 1 < min ? max : props.current - 1;
 		sendValue(next);
 	};
 
 	const onRight = () => {
 		if (props.disabled) return;
-
 		const next = props.current + 1 > max ? min : props.current + 1;
 		sendValue(next);
 	};
 
 	const updateIndex = (event) => {
 		if (props.disabled) return;
-
 		try {
 			const raw = event.target.value;
-
 			if (raw === '') return;
-
 			let v = parseInt(raw, 10);
 			if (Number.isNaN(v)) return;
-
-			if (v > max) {
-				v = min;
-			} else if (v < min) {
-				v = max;
-			}
-
+			if (v > max) v = min;
+			else if (v < min) v = max;
 			sendValue(v);
-		} catch (err) {
-			// console.log(err);
-		}
+		} catch (err) {}
 	};
 
 	const handleKeyDown = (event) => {
 		if (props.disabled) return;
-
-		if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+		if (event.key === 'ArrowUp') {
 			event.preventDefault();
-
-			if (event.key === 'ArrowUp') {
-				const next = props.current + 1 > max ? min : props.current + 1;
-				sendValue(next);
-			} else if (event.key === 'ArrowDown') {
-				const next = props.current - 1 < min ? max : props.current - 1;
-				sendValue(next);
-			}
+			const next = props.current + 1 > max ? min : props.current + 1;
+			sendValue(next);
+		} else if (event.key === 'ArrowDown') {
+			event.preventDefault();
+			const next = props.current - 1 < min ? max : props.current - 1;
+			sendValue(next);
 		}
 	};
 
 	const cssClass = props.disabled ? `${classes.div} disabled` : classes.div;
-	const style = props.disabled ? { opacity: 0.5 } : {};
+	const style = props.disabled ? { opacity: 0.4 } : {};
 
 	return (
 		<div className={cssClass} style={style}>
 			<div className={classes.wrapper}>
-				<div style={{ gridColumn: 2, gridRow: 1 }}>{props.label}</div>
-				<div
-					className={`${classes.action}${
-						props.disabled || props.current === 0 ? ' disabled' : ''
-					}`}
+				<span className={classes.label} style={{ gridColumn: 2, gridRow: 1 }}>
+					{props.label}
+				</span>
+				<IconButton
+					className={`${classes.actionBtn}${props.disabled ? ' disabled' : ''}`}
+					onClick={onLeft}
+					style={{ gridColumn: 1, gridRow: 2 }}
 				>
-					<IconButton
-						onClick={onLeft}
-						style={{ gridColumn: 1, gridRow: '1 / 2' }}
-					>
-						<FontAwesomeIcon icon={['fas', 'chevron-left']} />
-					</IconButton>
-				</div>
-				<div style={{ gridColumn: 2, gridRow: 2 }}>
+					<FontAwesomeIcon icon={['fas', 'chevron-left']} style={{ fontSize: 11 }} />
+				</IconButton>
+				<div className={classes.valueBox}>
 					<TextField
 						variant="standard"
 						value={props.current}
@@ -155,27 +176,17 @@ export default (props) => {
 						onKeyDown={handleKeyDown}
 						disabled={props.disabled}
 						type="number"
-						pattern="[0-9]*"
-						inputProps={{
-							min,
-							max,
-							step: 1,
-						}}
-					/>{' '}
-					/ {max}
+						inputProps={{ min, max, step: 1 }}
+					/>
+					<span className={classes.maxLabel}>/ {max}</span>
 				</div>
-				<div
-					className={`${classes.action}${
-						props.disabled || props.current === 0 ? ' disabled' : ''
-					}`}
+				<IconButton
+					className={`${classes.actionBtn}${props.disabled ? ' disabled' : ''}`}
+					onClick={onRight}
+					style={{ gridColumn: 3, gridRow: 2 }}
 				>
-					<IconButton
-						onClick={onRight}
-						style={{ gridColumn: 1, gridRow: '1 / 2' }}
-					>
-						<FontAwesomeIcon icon={['fas', 'chevron-right']} />
-					</IconButton>
-				</div>
+					<FontAwesomeIcon icon={['fas', 'chevron-right']} style={{ fontSize: 11 }} />
+				</IconButton>
 			</div>
 		</div>
 	);
