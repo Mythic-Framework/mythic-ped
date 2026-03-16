@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Tab, Tabs, alpha, Button, TextField } from '@mui/material';
+import { Tab, Tabs, Button, TextField } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -9,20 +9,10 @@ import { CurrencyFormat } from '../../util/Parser';
 import { SavePed, CancelEdits, SaveImport } from '../../actions/pedActions';
 import Clothes from '../../components/Clothes/Clothes';
 import Accessories from '../../components/Accessories/Accessories';
-import Body from '../../components/Body/Body';
 import Naked from '../../components/PedComponents/Naked';
-import Nui from '../../util/Nui';
 import CamBar from '../../components/UIComponents/CamBar';
 
 const useStyles = makeStyles((theme) => ({
-	save: {
-		position: 'absolute',
-		bottom: '1%',
-		left: '1%',
-		'& svg': {
-			marginLeft: 6,
-		},
-	},
 	panelShell: {
 		position: 'absolute',
 		right: 20,
@@ -31,29 +21,58 @@ const useStyles = makeStyles((theme) => ({
 		height: '92vh',
 		display: 'flex',
 		flexDirection: 'column',
-		background: alpha(theme.palette.secondary.dark, 0.69),
-		borderRadius: 10,
+		background: 'rgba(18,16,37,0.96)',
+		border: '1px solid rgba(32,134,146,0.2)',
+		boxShadow: '0 0 0 1px rgba(32,134,146,0.06), 0 24px 80px rgba(0,0,0,0.7), 0 0 40px rgba(32,134,146,0.06)',
+		borderRadius: 2,
 		overflow: 'hidden',
+		animation: '$panelSlide 0.5s cubic-bezier(0.16, 1, 0.3, 1) both',
+	},
+	panelAccent: {
+		height: 2,
+		background: 'linear-gradient(90deg, transparent, #208692, transparent)',
+		flexShrink: 0,
+	},
+	panelHeader: {
+		padding: '12px 16px 10px',
+		borderBottom: '1px solid rgba(32,134,146,0.15)',
+		flexShrink: 0,
+		display: 'flex',
+		flexDirection: 'column',
+		background: 'rgba(10,9,20,0.4)',
+	},
+	panelLabel: {
+		fontSize: 9,
+		fontWeight: 700,
+		letterSpacing: '0.3em',
+		textTransform: 'uppercase',
+		color: 'rgba(32,134,146,0.7)',
+		marginBottom: 2,
+		fontFamily: "'Rajdhani', sans-serif",
+	},
+	panelTitle: {
+		fontFamily: "'Orbitron', sans-serif",
+		fontSize: 13,
+		fontWeight: 700,
+		color: '#ffffff',
+		letterSpacing: '0.08em',
 	},
 	tabHeader: {
 		flex: '0 0 auto',
-		borderBottom: `1px solid ${alpha(theme.palette.primary.main, 0.18)}`,
+		borderBottom: '1px solid rgba(32,134,146,0.15)',
 	},
-	tabs: {
-		minHeight: 44,
-	},
+	tabs: { minHeight: 42 },
 	tab: {
-		minHeight: 44,
-		minWidth: 60,
+		minHeight: 42,
+		minWidth: 0,
+		flex: 1,
 		padding: 0,
-		textTransform: 'none',
-		opacity: 0.85,
-		'&.Mui-selected': {
-			opacity: 1,
-		},
-		'& svg': {
-			fontSize: 18,
-		},
+		opacity: 0.45,
+		color: '#ffffff',
+		fontSize: 15,
+		transition: 'opacity 0.2s ease, color 0.2s ease',
+		'&.Mui-selected': { opacity: 1, color: '#208692' },
+		'& svg': { fontSize: 16 },
 	},
 	panelBody: {
 		flex: '1 1 auto',
@@ -66,56 +85,60 @@ const useStyles = makeStyles((theme) => ({
 		left: '1.5%',
 		display: 'flex',
 		gap: 8,
-		padding: 8,
-		borderRadius: 10,
+		padding: '8px 10px',
+		borderRadius: 2,
+		background: 'rgba(18,16,37,0.9)',
+		border: '1px solid rgba(32,134,146,0.15)',
+		backdropFilter: 'blur(8px)',
 	},
 	btn: {
 		minWidth: 110,
 		height: 34,
-		padding: '0 12px',
-		borderRadius: 8,
-		textTransform: 'none',
-		fontSize: 14,
-		fontWeight: 500,
-		letterSpacing: 0,
-		color: theme.palette.text.primary,
-		background: alpha(theme.palette.primary.main, 0.35),
-		border: `1px solid ${alpha(theme.palette.primary.main, 0.25)}`,
+		padding: '0 14px',
+		borderRadius: 2,
+		textTransform: 'uppercase',
+		fontSize: 11,
+		fontWeight: 700,
+		fontFamily: "'Rajdhani', sans-serif",
+		letterSpacing: '0.15em',
+		color: '#ffffff',
+		background: 'rgba(32,134,146,0.12)',
+		border: '1px solid rgba(32,134,146,0.35)',
 		boxShadow: 'none',
-		transition:
-			'background 120ms ease, transform 120ms ease, border-color 120ms ease',
+		transition: 'all 150ms ease',
 		'&:hover': {
-			background: alpha(theme.palette.primary.main, 0.45),
-			borderColor: alpha(theme.palette.primary.main, 0.35),
+			background: 'rgba(32,134,146,0.22)',
+			borderColor: '#208692',
+			boxShadow: '0 0 12px rgba(32,134,146,0.3)',
 			transform: 'translateY(-1px)',
-			boxShadow: 'none',
 		},
-		'&:active': {
-			transform: 'translateY(0px)',
-		},
-		'& .MuiButton-startIcon': {
-			marginRight: 8,
-		},
-		'& .MuiButton-startIcon svg': {
-			fontSize: 12,
-			opacity: 0.85,
-		},
+		'&:active': { transform: 'translateY(0)' },
+		'& .MuiButton-startIcon': { marginRight: 6 },
+		'& .MuiButton-startIcon svg': { fontSize: 11 },
 	},
 	btnPrimary: {
-		background: alpha(theme.palette.success.main, 0.35),
-		borderColor: alpha(theme.palette.success.main, 0.25),
+		background: 'rgba(82,152,74,0.15)',
+		borderColor: 'rgba(82,152,74,0.4)',
+		color: '#60eb50',
 		'&:hover': {
-			background: alpha(theme.palette.success.main, 0.45),
-			borderColor: alpha(theme.palette.success.main, 0.35),
+			background: 'rgba(82,152,74,0.28)',
+			borderColor: '#52984a',
+			boxShadow: '0 0 12px rgba(82,152,74,0.25)',
 		},
 	},
 	btnDanger: {
-		background: alpha(theme.palette.error.main, 0.35),
-		borderColor: alpha(theme.palette.error.main, 0.25),
+		background: 'rgba(110,22,22,0.15)',
+		borderColor: 'rgba(161,52,52,0.4)',
+		color: '#a13434',
 		'&:hover': {
-			background: alpha(theme.palette.error.main, 0.45),
-			borderColor: alpha(theme.palette.error.main, 0.35),
+			background: 'rgba(110,22,22,0.28)',
+			borderColor: '#a13434',
+			boxShadow: '0 0 12px rgba(110,22,22,0.25)',
 		},
+	},
+	'@keyframes panelSlide': {
+		'0%': { opacity: 0, transform: 'translateX(40px)' },
+		'100%': { opacity: 1, transform: 'translateX(0)' },
 	},
 }));
 
@@ -128,13 +151,12 @@ export default (props) => {
 
 	const [cancelling, setCancelling] = useState(false);
 	const [saving, setSaving] = useState(false);
+	const [openImportDialog, setOpenImportDialog] = useState(false);
 	const [value, setValue] = useState(0);
 	const [importCode, setImportCode] = useState('');
 	const [outfitName, setOutfitName] = useState('');
 
-	const handleChange = (event, newValue) => {
-		setValue(newValue);
-	};
+	const handleChange = (event, newValue) => setValue(newValue);
 
 	const onCancel = () => {
 		setCancelling(false);
@@ -146,34 +168,11 @@ export default (props) => {
 		dispatch(SavePed(state));
 	};
 
-	const handleImport = () => {
-		setImportCode('');
-		setOpenImportDialog(true);
-	};
-
-	const handleCancelImport = () => {
-		setOpenImportDialog(false);
-		setCancelling(true);
-	};
-
-	const handleImportDialogClose = () => {
-		setOpenImportDialog(false);
-	};
-
-	const handleImportCodeChange = (event) => {
-		setImportCode(event.target.value);
-	};
-
-	const handleOutfitNameChange = (event) => {
-		setOutfitName(event.target.value);
-	};
-
 	const handleImportConfirm = () => {
 		setOpenImportDialog(false);
 		dispatch(SaveImport(outfitName, importCode));
 	};
 
-	const [openImportDialog, setOpenImportDialog] = useState(false);
 	const payLabel = admin
 		? 'Save Everything'
 		: `Pay ${CurrencyFormat.format(cost || 0)}`;
@@ -182,6 +181,11 @@ export default (props) => {
 		<div>
 			<CamBar />
 			<div className={classes.panelShell}>
+				<div className={classes.panelAccent} />
+				<div className={classes.panelHeader}>
+					<span className={classes.panelLabel}>Clothing Shop</span>
+					<span className={classes.panelTitle}>Fitting Room</span>
+				</div>
 				<div className={classes.tabHeader}>
 					<Tabs
 						orientation="horizontal"
@@ -192,40 +196,22 @@ export default (props) => {
 						variant="fullWidth"
 						className={classes.tabs}
 					>
-						<Tab
-							icon={<FontAwesomeIcon icon={['fas', 'shirt']} />}
-							className={classes.tab}
-						/>
-						<Tab
-							icon={
-								<FontAwesomeIcon
-									icon={['fas', 'hat-cowboy-side']}
-								/>
-							}
-							className={classes.tab}
-						/>
+						<Tab className={classes.tab} label={<FontAwesomeIcon icon={['fas', 'shirt']} />} />
+						<Tab className={classes.tab} label={<FontAwesomeIcon icon={['fas', 'hat-cowboy-side']} />} />
 					</Tabs>
 				</div>
-
 				<div className={classes.panelBody}>
-					<TabPanel value={value} index={0}>
-						<Clothes />
-					</TabPanel>
-					<TabPanel value={value} index={1}>
-						<Accessories />
-					</TabPanel>
+					<TabPanel value={value} index={0}><Clothes /></TabPanel>
+					<TabPanel value={value} index={1}><Accessories /></TabPanel>
 				</div>
 			</div>
 
 			<Naked />
-
 			<div className={classes.saveBar}>
 				<Button
 					className={classes.btn}
-					onClick={handleImport}
-					startIcon={
-						<FontAwesomeIcon icon={['fas', 'file-import']} />
-					}
+					onClick={() => setOpenImportDialog(true)}
+					startIcon={<FontAwesomeIcon icon={['fas', 'file-import']} />}
 				>
 					Import Outfit
 				</Button>
@@ -247,32 +233,28 @@ export default (props) => {
 
 			<Dialog
 				open={openImportDialog}
-				onClose={handleImportDialogClose}
-				title="Import Code"
+				title="Import Outfit Code"
 				onAccept={handleImportConfirm}
-				onDecline={handleImportDialogClose}
+				onDecline={() => setOpenImportDialog(false)}
 				acceptLang="Import"
 				declineLang="Cancel"
 			>
 				<TextField
 					autoFocus
 					margin="dense"
-					id="outfit-name"
-					label="Input Outfit Name"
+					label="Outfit Name"
 					type="text"
 					fullWidth
 					value={outfitName}
-					onChange={handleOutfitNameChange}
+					onChange={(e) => setOutfitName(e.target.value)}
 				/>
 				<TextField
-					autoFocus
 					margin="dense"
-					id="import-code"
-					label="Input Outfit Code"
+					label="Outfit Code"
 					type="text"
 					fullWidth
 					value={importCode}
-					onChange={handleImportCodeChange}
+					onChange={(e) => setImportCode(e.target.value)}
 				/>
 			</Dialog>
 
@@ -281,29 +263,20 @@ export default (props) => {
 				open={cancelling}
 				onAccept={onCancel}
 				onDecline={() => setCancelling(false)}
-				acceptLang="Yes, im sure"
-				declineLang="Wait, no im not done"
+				acceptLang="Yes, I'm sure"
+				declineLang="Wait, I'm not done"
 			>
-				<p>
-					All changes will be discarded, are you sure you want to
-					continue?
-				</p>
+				<p>All changes will be discarded, are you sure you want to continue?</p>
 			</Dialog>
 			<Dialog
 				title="Purchase Outfit?"
 				open={saving}
 				onAccept={onSave}
 				onDecline={() => setSaving(false)}
-				acceptLang="Yes, Im stylish"
-				declineLang="NO, im ugly, take me back."
+				acceptLang="Yes, I'm stylish"
+				declineLang="Let me keep shopping"
 			>
-				<p>
-					You will be charged{' '}
-					<span className={classes.highlight}>
-						{CurrencyFormat.format(cost)}
-					</span>
-					?
-				</p>
+				<p>You will be charged <span style={{ color: '#208692', fontWeight: 700 }}>{CurrencyFormat.format(cost)}</span>.</p>
 				<p>Are you sure you want to save?</p>
 			</Dialog>
 		</div>

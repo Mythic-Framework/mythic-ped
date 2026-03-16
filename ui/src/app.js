@@ -8,14 +8,10 @@ import {
 	ThemeProvider,
 	createTheme,
 	StyledEngineProvider,
-	alpha,
-	darken,
 } from '@mui/material';
 
 import App from 'containers/App';
-
 import WindowListener from 'containers/WindowListener';
-
 import configureStore from './configureStore';
 import KeyListener from './containers/KeyListener';
 
@@ -26,19 +22,19 @@ const MOUNT_NODE = document.getElementById('app');
 const render = () => {
 	const muiTheme = createTheme({
 		typography: {
-			fontFamily: ['Oswald'],
+			fontFamily: ["'Rajdhani', 'Oswald', sans-serif"],
 		},
 		palette: {
 			primary: {
-				main: '#1C8292',
-				light: '#44AABA',
-				dark: '#005A6A',
+				main: '#208692',
+				light: '#4db8c4',
+				dark: '#0e5a62',
 				contrastText: '#ffffff',
 			},
 			secondary: {
-				main: '#141414',
-				light: '#1c1c1c',
-				dark: '#0f0f0f',
+				main: '#121025',
+				light: '#1c1a30',
+				dark: '#0a0914',
 				contrastText: '#ffffff',
 			},
 			error: {
@@ -76,17 +72,17 @@ const render = () => {
 				rare5: '#f2d411',
 			},
 			border: {
-				main: '#e0e0e008',
+				main: 'rgba(32,134,146,0.08)',
 				light: '#ffffff',
-				dark: '#26292d',
-				input: 'rgba(255, 255, 255, 0.23)',
-				divider: 'rgba(255, 255, 255, 0.12)',
+				dark: '#0a0914',
+				input: 'rgba(32,134,146,0.3)',
+				divider: 'rgba(32,134,146,0.15)',
 			},
 			mode: 'dark',
 		},
 		components: {
 			MuiCssBaseline: {
-				styleOverrides: (theme) => ({
+				styleOverrides: {
 					'.fade-enter': { opacity: 0 },
 					'.fade-exit': { opacity: 1 },
 					'.fade-enter-active': { opacity: 1 },
@@ -95,53 +91,60 @@ const render = () => {
 						transition: 'opacity 500ms',
 					},
 					'*': {
-						'&::-webkit-scrollbar': {
-							width: 6,
-						},
-						'&::-webkit-scrollbar-track': {
-							background: 'transparent',
-						},
+						'&::-webkit-scrollbar': { width: 4 },
+						'&::-webkit-scrollbar-track': { background: 'transparent' },
 						'&::-webkit-scrollbar-thumb': {
-							backgroundColor: alpha(
-								theme.palette.primary.main,
-								0.55,
-							),
-							borderRadius: 6,
+							backgroundColor: 'rgba(32,134,146,0.35)',
+							borderRadius: 2,
 							transition: 'background-color 150ms ease-in-out',
 						},
 						'&::-webkit-scrollbar-thumb:hover': {
-							backgroundColor: alpha(
-								darken(theme.palette.primary.main, 0.15),
-								0.75,
-							),
+							backgroundColor: 'rgba(32,134,146,0.6)',
 						},
-						// scrollbarWidth: 'thin',
-						// scrollbarColor: `${alpha(
-						// 	theme.palette.primary.main,
-						// 	0.55,
-						// )} transparent`,
 					},
-				}),
+				},
 			},
 			MuiTooltip: {
 				styleOverrides: {
 					tooltip: {
-						fontSize: 16,
-						backgroundColor: '#151515',
-						border: '1px solid rgba(255, 255, 255, 0.23)',
-						boxShadow: `0 0 10px #000`,
+						fontFamily: "'Rajdhani', sans-serif",
+						fontSize: 14,
+						fontWeight: 600,
+						letterSpacing: '0.05em',
+						backgroundColor: 'rgba(18,16,37,0.97)',
+						border: '1px solid rgba(32,134,146,0.3)',
+						boxShadow: '0 0 20px rgba(0,0,0,0.7), 0 0 10px rgba(32,134,146,0.15)',
 					},
 				},
 			},
 			MuiPaper: {
 				styleOverrides: {
 					root: {
-						background: '#0f0f0f',
+						background: 'rgba(18,16,37,0.97)',
+						backgroundImage: 'none',
+						border: '1px solid rgba(32,134,146,0.2)',
+						boxShadow: '0 8px 32px rgba(0,0,0,0.6)',
+					},
+				},
+			},
+			MuiMenuItem: {
+				styleOverrides: {
+					root: {
+						fontFamily: "'Rajdhani', sans-serif",
+						fontSize: 14,
+						color: 'rgba(255,255,255,0.8)',
+						'&:hover': { background: 'rgba(32,134,146,0.1)' },
+						'&.Mui-selected': {
+							background: 'rgba(32,134,146,0.2)',
+							color: '#208692',
+							'&:hover': { background: 'rgba(32,134,146,0.25)' },
+						},
 					},
 				},
 			},
 		},
 	});
+
 	ReactDOM.render(
 		<Provider store={store}>
 			<KeyListener>
