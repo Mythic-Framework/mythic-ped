@@ -293,6 +293,7 @@ function RetrieveComponents()
 	Ped = exports["mythic-base"]:FetchComponent("Ped")
 	Inventory = exports["mythic-base"]:FetchComponent("Inventory")
 	Chat = exports["mythic-base"]:FetchComponent("Chat")
+	Version = exports["mythic-base"]:FetchComponent("Version")
 end
 
 AddEventHandler("Core:Shared:Ready", function()
@@ -307,6 +308,7 @@ AddEventHandler("Core:Shared:Ready", function()
 		"Ped",
 		"Inventory",
 		"Chat",
+		"Version",
 	}, function(error)
 		if #error > 0 then
 			return
@@ -397,6 +399,8 @@ AddEventHandler("Core:Shared:Ready", function()
 		end, {
 			help = "Remove Glasses",
 		})
+
+		Version:Check('Mythic-Framework/Mythic-VersionCheckers', GetCurrentResourceName())
 	end)
 end)
 

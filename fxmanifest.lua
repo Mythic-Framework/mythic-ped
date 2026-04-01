@@ -1,10 +1,10 @@
-name 'ARP Ped'
-author '[Alzar]'
-version 'v1.0.0'
-url 'https://www.mythicrp.com'
-lua54 'yes'
 fx_version "cerulean"
+lua54 'yes'
 game "gta5"
+
+version '1.0.0'
+repository 'https://github.com/Mythic-Framework/mythic-ped'
+
 server_script "@oxmysql/lib/MySQL.lua"
 client_script "@mythic-base/components/cl_error.lua"
 client_script "@mythic-pwnzor/client/check.lua"
